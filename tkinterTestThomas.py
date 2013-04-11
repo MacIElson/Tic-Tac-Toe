@@ -1,11 +1,11 @@
 # File: hello2.py
 
-from Tkinter import *
+from tkinter import *
 
 class App:
 
     def __init__(self, master):
-		photo = PhotoImage(file="X_mark.gif", height=20, width=20)
+    	photo = PhotoImage(file="X_mark.gif", height=20, width=20)
 
 		b1 = Button(master, image=photo)
 		b1.image = photo

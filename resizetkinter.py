@@ -1,4 +1,4 @@
-from Tkinter import *
+from tkinter import *
 
 class App:
 
@@ -24,7 +24,7 @@ class App:
           Grid.rowconfigure(frame,y,weight=1)
 
         def say_hi(self):
-            print "hi there, everyone!"
+            print("hi there, everyone!")
 
 root = Tk()
 
