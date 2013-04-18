@@ -45,7 +45,7 @@ class GameManager():
 		b = 0 #buttoncounter
 		for x in range(SLENGTH):
 			for y in range(SHEIGHT):
-				button = Button(inputframe, bg="white",command=self.assign_token(b))
+				button = gButton(b,inputframe, bg="white", width=3)
 				button.grid(column=x, row=y)
 				inputbuttons.append(button)
 				b+=1
@@ -56,25 +56,24 @@ class GameManager():
 			Grid.rowconfigure(frame,y,weight=1)
 
 		# Generate Boards for the metaframe:
-		b=0 #Counter for board numbers
-		for i in range(SLENGTH):
-			for j in range(SHEIGHT):
-				miniboard = BoardFrame(metaframe)
-				miniboard.grid(column=j, row=i) #Row and columns are flipped
-				miniboard.pack(side=LEFT)
-				metagpanels.append(miniboard)
-				b += 1
-		for i in range(SLENGTH):
-			Grid.columnconfigure(frame,x,weight=1)
-		for j in range(MHEIGHT):
-			Grid.rowconfigure(frame,y,weight=1)
-		
+		# b=0 #Counter for board numbers
+		# for i in range(SLENGTH):
+			# for j in range(SHEIGHT):
+				# miniboard = BoardFrame(metaframe)
+				# miniboard.grid(column=j, row=i) #Row and columns are flipped
+				# miniboard.pack(side=LEFT)
+				# metagpanels.append(miniboard)
+				# b += 1
+		# for i in range(SLENGTH):
+			# Grid.columnconfigure(frame,x,weight=1)
+		# for j in range(MHEIGHT):
+			# Grid.rowconfigure(frame,y,weight=1)
+		# frame.pack()
 		
 		###Failsafe to exit program after 5 secs
-		time.sleep(5)###
-		print("Exiting.")###
-		sys.exit(0)###
-		
+		# time.sleep(5)###
+		# print("Exiting.")###
+		# sys.exit(0)###
 			
 
 	def assign_token(self, frame):
@@ -82,9 +81,9 @@ class GameManager():
 		print("assign_token###: "+ str(frame))
 		
 class BoardFrame(Frame):
-	def __init__(self, squarenum=0, *args, **kwargs):
+	def __init__(self, *args, **kwargs):
 		Frame.__init__(self, *args, **kwargs)
-		self.num = squarenum
+		#self.num = squarenum
 		self.labellist = []                                              #List of all of the labels
 		l = 0                                                            #Label counter
 		for i in range(SLENGTH):
@@ -112,6 +111,8 @@ class gButton(Button):
 		"""Extends the tkinter.button class: the gButton takes an int 'squarenum' that determines what square
 		the button represents, from 0-8"""
 		self.num = squarenum
+		self.text= str(self.num)
+		self.activebackground = "LightBlue"
 		
 	def getNum(self):
 		return self.num
