@@ -57,14 +57,15 @@ class GameManager():
 
 		# Generate Boards for the metaframe:
 		b = 0 #Counter for board numbers
-		l = 0
+		
 		for i in range(SLENGTH):
 			for j in range(SHEIGHT):
 				miniboard = BoardFrame(squarenum=b,master=metaframe,bg="DarkGrey",width=3,height=3,padx=2,pady=2)
 				#Generate labels for each board
+				l = 0
 				for il in range(SLENGTH):
 					for jl in range(SHEIGHT):
-						label = gLabel(master=miniboard, bg="white",text=str(l), fg = "LightGrey",width=6, height=3)
+						label = gLabel(squarenum=l,master=miniboard, bg="white",text=str("b"+str(b)+"s"+str(l)), fg = "LightGrey",width=6, height=3)
 						label.grid(column=jl, row=il, padx=1, pady=1) #Row and columns are flipped
 						miniboard.addLabel(label)
 						l += 1
@@ -75,10 +76,11 @@ class GameManager():
 				b += 1
 			
 	def assign_token(self, miniboardbum,spacenum):
-		"""Changes the token of the corresponding metaboard label"""
-		miniboard = miniboards[miniboardnum]
-		miniboard.setLabel(spacenum, "X")
-		print("assign_token###: ")
+		# """Changes the token of the corresponding metaboard label"""
+		# miniboard = miniboards[miniboardnum]
+		# miniboard.setLabel(spacenum, "X")
+		# print("assign_token###: ")
+		print("")
 		
 class BoardFrame(Frame):
 	def __init__(self, squarenum=0, *args, **kwargs):
