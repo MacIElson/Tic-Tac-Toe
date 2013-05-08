@@ -19,21 +19,21 @@ nextmini = 4		#global variable for the current metaboard (sketch, we know.)
 currentmini = 4
 prevmini = 4
 
-win_combos =(set([0, 1, 2]),
-			 set([3, 4, 5]), 
-			 set([6, 7, 8]),
-			 set([0, 3, 6]), 
-			 set([1, 4, 7]), 
-			 set([2, 5, 8]),
-			 set([0, 4, 8]),
-			 set([2, 4, 6])) 
+win_combos =([0, 1, 2],
+			 [3, 4, 5], 
+			 [6, 7, 8],
+			 [0, 3, 6], 
+			 [1, 4, 7], 
+			 [2, 5, 8],
+			 [0, 4, 8],
+			 [2, 4, 6]) 
 
 class GameManager():
 	def __init__(self, master):
 		self.turn = 0
 		self.firstplay = True
 		self.switchboards = False
-		self.win_list = [None for i in range(9)]								#Create a list of the winners of each board
+		self.win_list = [" " for i in range(9)]									#Create a list of the winners of each board
 		self.setupGUI()
 	
 	def setupGUI(self):
@@ -101,12 +101,22 @@ class GameManager():
 	def runButtonStates(self):
 		"""Checks the content of each label in the current miniboard. 
 		   If a label is occupied, disable its corresponding button."""
+		
 		currentlabellist = self.miniboards[nextmini].labellist
 		for l in range(0,len(currentlabellist)): 								#For each label in the current miniboard, from 0 to length
-			if currentlabellist[l].cget("text") != EMPTY: 						
+			if(currentlabellist[l].cget("text") != EMPTY): 						
 				self.inputbuttons[l].changeState(False)      					#If occupied, disable the input button
 			else:
-				self.inputbuttons[l].changeState(True)       					#If blank, enable the input button
+				self.inputbuttons[l].changeState(True)				#If blank, enable the input button
+
+		for i in range(0, 9):
+			buttonIsClean = False
+			currentlabellist = self.miniboards[i].labellist
+			for x in currentlabellist:
+				if(x.cget("text") == EMPTY):
+					buttonIsClean = True				#If blank, enable the input button
+			if(not buttonIsClean):
+				self.inputbuttons[i].changeState(False)
 	
 	def changeMiniBackgrounds(self):
 		"""Changes the backgrounds of the miniboards: every miniboard will be white except for the miniboard to be played on next"""
@@ -121,13 +131,72 @@ class GameManager():
 			Move the next player to the next miniboard if applicable."""
 		if self.miniboards[nextmini].canMove(snum) == True:
 			self.miniboards[nextmini].makeMove(snum, tokens[self.turn])				#Set the label of the button
+			
+			self.checkSmallBoardVictory()
+			self.checkBigBoardVictory()
+			
 			self.nextBoard(snum)													#Set the miniboard tracker to the next miniboard
 			self.runButtonStates()													#Change the states of the input buttons as necessary
 			self.changeMiniBackgrounds()
 			self.nextturn()
 		else:
-			self.displayText()
-		
+			pass
+			#self.displayText()
+
+	def checkBigBoardVictory(self):
+		print(self.win_list)
+		#X test
+		placedPieces = []
+		for i in range(0,9):
+			if(self.win_list[i] == 'O'):
+				placedPieces += [i]
+		if(placedPieces in win_combos):
+			self.win_list[nextmini] = "O"
+			print("player X WON THE GAME!!!")
+			self.explodeBoard()
+
+	 	#O test
+		placedPieces = []
+		for i in range(0,9):
+			if(self.win_list[i] == 'O'):
+				placedPieces += [i]
+		if(placedPieces in win_combos):
+			self.win_list[nextmini] = "O"
+			print("player O WON THE GAME!!!")
+			self.explodeBoard()
+
+	def checkSmallBoardVictory(self):
+		if(self.win_list[nextmini] == " "):
+			#X test
+			placedPieces = []
+			for i in range(0,9):
+				if(self.miniboards[nextmini].spacelist[i] == 'X'):
+					placedPieces += [i]
+
+			if(placedPieces in win_combos):
+				self.win_list[nextmini] = "X"
+				print("player X won board")
+
+		 	#O test
+			placedPieces = []
+			for i in range(0,9):
+				if(self.miniboards[nextmini].spacelist[i] == 'O'):
+					placedPieces += [i]
+			if(placedPieces in win_combos):
+				self.win_list[nextmini] = "O"
+				print("player O won board")
+
+	def explodeBoard(self):
+		self.miniboards[0].changeBGs("yellow")
+		self.miniboards[1].changeBGs("red")
+		self.miniboards[2].changeBGs("blue")
+		self.miniboards[3].changeBGs("red")
+		self.miniboards[4].changeBGs("blue")
+		self.miniboards[5].changeBGs("yellow")
+		self.miniboards[6].changeBGs("blue")
+		self.miniboards[7].changeBGs("yellow")
+		self.miniboards[8].changeBGs("red")
+
 	def get_token_wins(self, token): 
 		"""Returns a list of all boards that the player has won."""
 		return [pos for pos, value in enumerate(self.win_list) if value == token]
@@ -146,6 +215,7 @@ class GameManager():
 				if win:
 					result = token 												#return the winning player
 		print("DEBUG: Result: " + str(result))
+		print("DEBUG: Boards: ")
 		return result 	
 	
 	def is_board_full(board_pos): 												#checks if specific board is full
